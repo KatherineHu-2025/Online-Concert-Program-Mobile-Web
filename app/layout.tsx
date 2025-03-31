@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Lora } from 'next/font/google';
 import "./globals.css";
 import { Lora } from 'next/font/google';
 
@@ -13,7 +14,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const lora = Lora({ subsets: ['latin'] });
+
+const lora = Lora({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-lora',
+});
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,10 +33,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${lora.className} antialiased`}
-      >
+
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} antialiased`}>
+      <body className={`${geistSans.className} ${geistMono.className} ${lora.className}`}>
         {children}
       </body>
     </html>

@@ -10,9 +10,11 @@ const config: Config = {
     extend: {
       fontFamily: {
         lora: ['Lora', 'serif'],
+        sans: ['var(--font-lora)'],
       },
     },
   },
   plugins: [],
-}
-export default config 
+  };
+  
+export default config;
