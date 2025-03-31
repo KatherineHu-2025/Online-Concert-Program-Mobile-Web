@@ -72,12 +72,4 @@ export default function ConcertPage() {
       <Navbar />
     </div>
   );
-}
-
-import { 
-  HomeIcon, 
-  BookOpenIcon, 
-  CameraIcon, 
-  PencilIcon, 
-  Cog6ToothIcon 
-} from '@heroicons/react/24/outline'; 
+} 

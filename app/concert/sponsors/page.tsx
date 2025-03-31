@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '../../components/Navbar';
 
 export default function SponsorsPage() {
@@ -30,10 +31,12 @@ export default function SponsorsPage() {
 
       {/* Header with background image */}
       <div className="relative h-[200px]">
-        <img
+        <Image
           src="/orchestra-bg.jpg"
           alt="Orchestra performing"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          className="object-cover"
+          priority
         />
         <div className="absolute inset-0 bg-[#2D2F3D] opacity-60"></div>
         
