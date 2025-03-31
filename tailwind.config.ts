@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
@@ -9,11 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
+        lora: ['Lora', 'serif'],
         sans: ['var(--font-lora)'],
       },
     },
   },
   plugins: [],
-};
-
-export default config; 
+  };
+  
+export default config;

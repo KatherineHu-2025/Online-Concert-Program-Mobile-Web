@@ -13,11 +13,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 const lora = Lora({ 
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-lora',
 });
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,6 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} antialiased`}>
       <body className={`${geistSans.className} ${geistMono.className} ${lora.className}`}>
         {children}
