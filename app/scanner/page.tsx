@@ -92,7 +92,7 @@ export default function ScannerPage() {
       const html5QrCode = new Html5Qrcode("qr-reader-file");
       const result = await html5QrCode.scanFile(file, true);
       setScanResult(result);
-    } catch (err) {
+    } catch {
       setError("Could not read QR code from image. Please try another image or use camera scanning.");
     }
   };

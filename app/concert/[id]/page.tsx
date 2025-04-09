@@ -43,7 +43,7 @@ export default function ConcertPage() {
           <div className="text-center">
             <h1 className="text-2xl font-semibold text-white mb-4">Concert Not Found</h1>
             <p className="text-[#E8D1C5] text-lg">
-              The concert you're looking for doesn't exist.
+              The concert you&apos;re looking for doesn&apos;t exist.
             </p>
           </div>
         </div>
