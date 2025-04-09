@@ -1,49 +1,64 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { CalendarIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import Navbar from '../../components/Navbar';
-
-interface Concert {
-  id: string;
-  title: string;
-  date: string;
-  venue: string;
-  circleColor: string;
-  month: string;
-}
-
-const concerts: Concert[] = [
-  {
-    id: '1',
-    title: 'Czech Chamber Music',
-    date: '3/30/2025 7:30pm',
-    venue: 'Tyler-Tallman Hall',
-    circleColor: 'DEDDED',
-    month: 'MAR'
-  },
-  {
-    id: '2',
-    title: "Debussy's La Mer",
-    date: '4/20/2025 7:30pm',
-    venue: 'Duke Family Performance Hall',
-    circleColor: 'E0EFD8',
-    month: 'APR'
-  }
-];
+import { Concert, getConcertById } from '../../firebase/services';
 
 export default function ConcertPage() {
   const params = useParams();
-  const concert = concerts.find(c => c.id === params.id);
+  const [concert, setConcert] = useState<Concert | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!concert) {
+  useEffect(() => {
+    async function fetchConcert() {
+      if (params.id) {
+        console.log('Fetching concert with ID:', params.id);
+        try {
+          const concertData = await getConcertById(params.id as string);
+          console.log('Concert data:', concertData);
+          if (concertData) {
+            setConcert(concertData);
+          } else {
+            console.error('No concert found with ID:', params.id);
+            setError('Concert not found');
+          }
+        } catch (err) {
+          console.error('Error fetching concert:', err);
+          setError('Failed to load concert information');
+        }
+      }
+      setLoading(false);
+    }
+
+    fetchConcert();
+  }, [params.id]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex flex-col bg-[#2B2F3E]">
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold text-white mb-4">Loading...</h1>
+          </div>
+        </div>
+        <Navbar />
+      </main>
+    );
+  }
+
+  if (error || !concert) {
     return (
       <main className="min-h-screen flex flex-col bg-[#2B2F3E]">
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center">
             <h1 className="text-2xl font-semibold text-white mb-4">Concert Not Found</h1>
             <p className="text-[#E8D1C5] text-lg">
-              The concert you&apos;re looking for doesn&apos;t exist.
+              {error || "The concert you&apos;re looking for doesn&apos;t exist."}
             </p>
           </div>
         </div>
@@ -53,36 +68,71 @@ export default function ConcertPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#2B2F3E]">
-      <div className="flex-1 p-6">
-        <div className="bg-[#2F4538] rounded-xl p-6 text-white">
-          <div className="flex justify-between items-start mb-6">
-            <h1 className="text-2xl font-semibold">{concert.title}</h1>
-            <div 
-              className="w-12 h-12 rounded-full"
-              style={{ backgroundColor: `#${concert.circleColor}` }}
-            />
-          </div>
-          
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>{concert.date}</span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>{concert.venue}</span>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#FEFBF4] font-lora">
+      {/* Top title bar */}
+      <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4">
+        <Link href="/" className="text-xl">
+          ←
+        </Link>
+        <h1 className="text-lg font-bold">
+          Interactive Concert Program
+        </h1>
+      </div>
+
+      {/* Header with background image */}
+      <div className="relative h-[200px]">
+        <Image
+          src="/orchestra-bg.jpg"
+          alt="Orchestra performing"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-[#2D2F3D] opacity-60"></div>
+        
+        {/* Concert Title */}
+        <div className="relative z-10 h-full flex items-end pb-3">
+          <h2 className="text-white text-2xl font-bold px-4">
+            {concert.title}
+          </h2>
         </div>
       </div>
+
+      {/* Concert Details */}
+      <div className="px-4 py-6">
+        <div className="flex items-center gap-2 text-gray-700 mb-4">
+          <CalendarIcon className="h-6 w-6" />
+          <span className="text-xl">{concert.date}</span>
+        </div>
+        
+        <div className="flex items-center gap-2 text-gray-700 mb-8">
+          <MapPinIcon className="h-6 w-6" />
+          <span className="text-xl">{concert.location}</span>
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="space-y-4">
+          <Link href={`/concert/${params.id}/performers`} className="block">
+            <button className="w-full py-2.5 px-6 bg-[#6D4C5E] text-white rounded-lg text-xl font-semibold">
+              Performers
+            </button>
+          </Link>
+          
+          <Link href={`/concert/${params.id}/program`} className="block">
+            <button className="w-full py-2.5 px-6 bg-[#E5EFE7] text-gray-800 rounded-lg text-xl font-semibold">
+              Program
+            </button>
+          </Link>
+          
+          <Link href={`/concert/${params.id}/sponsors`} className="block">
+            <button className="w-full py-2.5 px-6 bg-[#A5A88F] text-white rounded-lg text-xl font-semibold">
+              Sponsors
+            </button>
+          </Link>
+        </div>
+      </div>
+
       <Navbar />
-    </main>
+    </div>
   );
 } 

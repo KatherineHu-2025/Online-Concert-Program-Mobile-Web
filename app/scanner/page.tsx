@@ -5,6 +5,8 @@ import { Html5Qrcode } from 'html5-qrcode';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
+import { getConcertById } from '../firebase/services';
+import { saveConcert } from '../utils/concertStorage';
 
 export default function ScannerPage() {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -30,11 +32,17 @@ export default function ScannerPage() {
     setScanResult(decodedText);
     await stopScanning();
     
-    // Extract concert ID from QR code and navigate
     try {
-      const concertId = decodedText.split('/').pop();
-      if (concertId) {
+      // The QR code should contain the full document ID from Firebase
+      const concertId = decodedText;
+      
+      // Fetch and save the concert data
+      const concertData = await getConcertById(concertId);
+      if (concertData) {
+        saveConcert(concertId, concertData);
         router.push(`/concert/${concertId}`);
+      } else {
+        setError("Concert not found");
       }
     } catch {
       setError("Invalid QR code format");
@@ -53,14 +61,19 @@ export default function ScannerPage() {
           {
             fps: 10,
             qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
           },
           (decodedText) => {
+            console.log('Successfully scanned:', decodedText);
             handleScanSuccess(decodedText);
           },
           (errorMessage) => {
-            // Suppress common scanning messages
-            if (!errorMessage.includes("No QR code found")) {
-              console.error(errorMessage);
+            // Only log critical errors
+            if (!errorMessage.includes("No QR code found") && 
+                !errorMessage.includes("No barcode") &&
+                !errorMessage.includes("NotFoundException") &&
+                !errorMessage.includes("No MultiFormat Readers")) {
+              console.error('Scanning error:', errorMessage);
             }
           }
         );
@@ -68,7 +81,8 @@ export default function ScannerPage() {
       } else {
         setError("No camera devices found");
       }
-    } catch {
+    } catch (error) {
+      console.error('Scanner initialization error:', error);
       setError("Failed to start camera scanning. Please check camera permissions.");
     }
   }, [handleScanSuccess]);
@@ -91,12 +105,19 @@ export default function ScannerPage() {
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !html5QrCode.current) return;
+    if (!file) return;
 
     try {
+      if (!html5QrCode.current) {
+        html5QrCode.current = new Html5Qrcode("qr-reader");
+      }
+
+      console.log('Attempting to scan file:', file.name);
       const result = await html5QrCode.current.scanFile(file, true);
+      console.log('File scan result:', result);
       handleScanSuccess(result);
-    } catch {
+    } catch (error) {
+      console.error('File scanning error:', error);
       setError("Could not read QR code from image. Please try another image or use camera scanning.");
     }
   };

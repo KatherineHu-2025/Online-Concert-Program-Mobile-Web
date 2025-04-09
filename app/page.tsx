@@ -1,47 +1,35 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ConcertBlock from './components/ConcertBlock';
 import Navbar from './components/Navbar';
-
-interface Concert {
-  id: string;
-  title: string;
-  date: string;
-  venue: string;
-  circleColor: string;
-  month: string;
-}
+import { getSavedConcerts, SavedConcert } from './utils/concertStorage';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [searchQuery, setSearchQuery] = useState('');
+  const [savedConcerts, setSavedConcerts] = useState<SavedConcert[]>([]);
 
-  const upcomingConcerts: Concert[] = [
-    {
-      id: '1',
-      title: 'Czech Chamber Music',
-      date: '3/30/2025 7:30pm',
-      venue: 'Tyler-Tallman Hall',
-      circleColor: 'DEDDED',
-      month: 'MAR'
-    },
-    {
-      id: '2',
-      title: "Debussy's La Mer",
-      date: '4/20/2025 7:30pm',
-      venue: 'Duke Family Performance Hall',
-      circleColor: 'E0EFD8',
-      month: 'APR'
-    }
-  ];
+  useEffect(() => {
+    // Load saved concerts from local storage
+    const concerts = getSavedConcerts();
+    setSavedConcerts(concerts);
+  }, []);
 
-  const pastConcerts: Concert[] = [];
-
-  const filteredConcerts = (activeTab === 'upcoming' ? upcomingConcerts : pastConcerts)
+  const currentDate = new Date();
+  
+  const filteredConcerts = savedConcerts
+    .filter(concert => {
+      const concertDate = new Date(concert.date);
+      if (activeTab === 'upcoming') {
+        return concertDate >= currentDate;
+      } else {
+        return concertDate < currentDate;
+      }
+    })
     .filter(concert => 
       concert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      concert.venue.toLowerCase().includes(searchQuery.toLowerCase())
+      concert.location.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   return (
@@ -117,37 +105,47 @@ export default function Home() {
         </div>
 
         <section className="px-6 pb-24">
-          <div className="relative">
-            {/* Continuous Timeline Line */}
-            <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-[#C7CCE6]" />
-            
-            <div className="space-y-4">
-              {filteredConcerts.map((concert) => (
-                <div key={concert.id} className="flex gap-4">
-                  {/* Timeline Node */}
-                  <div className="relative z-10">
-                    <div className="w-8 h-8 rounded-full bg-[#C7CCE6] flex items-center justify-center text-[#3B3C50] text-sm">
-                      {concert.month}
+          {savedConcerts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 mb-4">No concerts added yet</p>
+              <p className="text-gray-400 text-sm">
+                Scan a concert QR code to add it to your list
+              </p>
+            </div>
+          ) : (
+            <div className="relative">
+              {/* Continuous Timeline Line */}
+              <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-[#C7CCE6]" />
+              
+              <div className="space-y-4">
+                {filteredConcerts.map((concert) => (
+                  <div key={concert.id} className="flex gap-4">
+                    {/* Timeline Node */}
+                    <div className="relative z-10">
+                      <div className="w-8 h-8 rounded-full bg-[#C7CCE6] flex items-center justify-center text-[#3B3C50] text-sm">
+                        {new Date(concert.date).toLocaleString('default', { month: 'short' }).toUpperCase()}
+                      </div>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <ConcertBlock
+                        id={concert.id}
+                        title={concert.title}
+                        date={concert.date}
+                        venue={concert.location}
+                        circleColor={concert.concertType === 'Symphony' ? 'DEDDED' : 'E0EFD8'}
+                      />
                     </div>
                   </div>
-                  
-                  <div className="flex-1">
-                    <ConcertBlock
-                      title={concert.title}
-                      date={concert.date}
-                      venue={concert.venue}
-                      circleColor={concert.circleColor}
-                    />
+                ))}
+                {filteredConcerts.length === 0 && (
+                  <div className="text-center text-gray-500 py-8">
+                    No concerts found
                   </div>
-                </div>
-              ))}
-              {filteredConcerts.length === 0 && (
-                <div className="text-center text-gray-500 py-8">
-                  No concerts found
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </section>
       </div>
 
