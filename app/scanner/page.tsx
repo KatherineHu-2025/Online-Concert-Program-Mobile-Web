@@ -55,7 +55,14 @@ export default function ScannerPage() {
     try {
       const devices = await Html5Qrcode.getCameras();
       if (devices && devices.length > 0) {
-        const deviceId = devices[0].id;
+        // Try to find back camera
+        const backCamera = devices.find(device => 
+          device.label.toLowerCase().includes('back') || 
+          device.label.toLowerCase().includes('environment')
+        );
+        // Use back camera if found, otherwise use the first available camera
+        const deviceId = backCamera ? backCamera.id : devices[0].id;
+        
         await html5QrCode.current.start(
           deviceId,
           {
