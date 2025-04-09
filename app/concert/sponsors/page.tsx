@@ -49,17 +49,19 @@ export default function SponsorsPage() {
       </div>
 
       {/* Sponsors Section */}
-      <div className="px-4 py-6">
+      <div className="px-4 pt-6 pb-24">
         <div className="space-y-4">
           {sponsors.map((sponsor, index) => (
             <div 
               key={index} 
-              className="bg-[#A5A88F]/80 rounded-lg p-6 text-white"
+              className="bg-[#A5A46B] rounded-2xl overflow-hidden"
             >
-              <h3 className="font-bold text-lg mb-2">{sponsor.title}</h3>
-              <p className="text-white/90 leading-relaxed">
-                {sponsor.description}
-              </p>
+              <div className="p-6">
+                <h3 className="font-bold text-lg mb-2 text-white">{sponsor.title}</h3>
+                <p className="text-white/90 leading-relaxed">
+                  {sponsor.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>

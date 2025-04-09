@@ -59,24 +59,27 @@ export default function ProgramPage() {
       </div>
 
       {/* Program Section */}
-      <div className="px-4 py-6">
+      <div className="px-4 pt-6 pb-24">
         <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Program</h2>
-        <div className="bg-[#E5EFE7] rounded-lg p-6">
-          {programItems.map((item, index) => (
-            <React.Fragment key={index}>
-              {item.title === 'Intermission' ? (
-                <div className="py-8 text-center italic text-gray-800 text-lg">
-                  {item.title}
-                </div>
-              ) : (
-                <ProgramItem
-                  title={item.title}
-                  composer={item.composer}
-                  years={item.years}
-                />
-              )}
-            </React.Fragment>
-          ))}
+        <div className="bg-[#E5EFE7] rounded-2xl overflow-hidden">
+          <div className="p-6 min-h-[calc(100vh-24rem)] overflow-y-auto">
+            {programItems.map((item, index) => (
+              <React.Fragment key={index}>
+                {item.title === 'Intermission' ? (
+                  <div className="py-8 text-center italic text-gray-800 text-lg">
+                    {item.title}
+                  </div>
+                ) : (
+                  <ProgramItem
+                    title={item.title}
+                    composer={item.composer}
+                    years={item.years}
+                    isLast={index === programItems.length - 1}
+                  />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       </div>
 
