@@ -1,5 +1,3 @@
-import { Concert } from '../firebase/services';
-
 export interface SavedConcert {
   id: string;
   title: string;
