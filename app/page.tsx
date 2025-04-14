@@ -45,14 +45,16 @@ export default function Home() {
             {/* Upcoming Concerts Tab */}
             <div className="flex-1">
               <div 
-                className="cursor-pointer"
+                className="cursor-pointer h-[64px] flex flex-col"
                 onClick={() => setActiveTab('upcoming')}
               >
-                <h2 className="text-lg mb-2 text-[#3B3C50] text-center">
-                  Upcoming Concerts
-                </h2>
+                <div className="flex-1 flex items-center justify-center">
+                  <h2 className="text-lg text-[#3B3C50] text-center">
+                    Upcoming<br />Concerts
+                  </h2>
+                </div>
                 <div 
-                  className={`h-2 rounded-full ${
+                  className={`h-[6px] mx-2 rounded-full ${
                     activeTab === 'upcoming' ? 'bg-[#334934]' : 'bg-transparent'
                   }`}
                 />
@@ -65,15 +67,17 @@ export default function Home() {
             {/* Past Concerts Tab */}
             <div className="flex-1">
               <div 
-                className="cursor-pointer"
+                className="cursor-pointer h-[64px] flex flex-col"
                 onClick={() => setActiveTab('past')}
               >
-                <h2 className="text-lg mb-2 text-[#3B3C50] text-center">
-                  Past Concerts
-                </h2>
+                <div className="flex-1 flex items-center justify-center">
+                  <h2 className="text-lg text-[#3B3C50] text-center">
+                    Past Concerts
+                  </h2>
+                </div>
                 <div 
-                  className={`h-2 rounded-full ${
-                    activeTab === 'past' ? 'bg-[#F2C3B3]' : 'bg-transparent'
+                  className={`h-[6px] mx-2 rounded-full ${
+                    activeTab === 'past' ? 'bg-[#A5A46B]' : 'bg-transparent'
                   }`}
                 />
               </div>
@@ -84,12 +88,12 @@ export default function Home() {
             <input
               type="text"
               placeholder="Search Events"
-              className="w-full bg-white/10 rounded-full py-2 px-4 pl-10 text-[#3B3C50] placeholder-gray-400 border border-gray-200"
+              className="w-full bg-white/10 rounded-full py-2 px-4 pl-10 text-[#3B3C50] placeholder-[#3B3C50] border border-[#DEDDED] focus:outline-none focus:border-[#F2C3B3] focus:ring-1 focus:ring-[#F2C3B3] transition-colors"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#3B3C50]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -122,7 +126,7 @@ export default function Home() {
                   <div key={concert.id} className="flex gap-4">
                     {/* Timeline Node */}
                     <div className="relative z-10">
-                      <div className="w-8 h-8 rounded-full bg-[#C7CCE6] flex items-center justify-center text-[#3B3C50] text-sm">
+                      <div className="w-8 h-8 rounded-full bg-[#7472B3] flex items-center justify-center text-[#FEFBF4] text-xs font-bold">
                         {new Date(concert.date).toLocaleString('default', { month: 'short' }).toUpperCase()}
                       </div>
                     </div>
@@ -133,13 +137,13 @@ export default function Home() {
                         title={concert.title}
                         date={concert.date}
                         venue={concert.location}
-                        circleColor={concert.concertType === 'Symphony' ? 'DEDDED' : 'E0EFD8'}
+                        circleColor={new Date(concert.date) >= currentDate ? '334934' : 'A5A46B'}
                       />
                     </div>
                   </div>
                 ))}
                 {filteredConcerts.length === 0 && (
-                  <div className="text-center text-gray-500 py-8">
+                  <div className="text-center text-[#3B3C50] py-8">
                     No concerts found
                   </div>
                 )}
