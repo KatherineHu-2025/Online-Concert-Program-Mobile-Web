@@ -3,22 +3,22 @@
 import React, { useState, useEffect } from 'react';
 import ConcertBlock from './components/ConcertBlock';
 import Navbar from './components/Navbar';
-import { getSavedConcerts, SavedConcert } from './utils/concertStorage';
+import { getScannedConcerts, SavedConcert } from './utils/concertStorage';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [searchQuery, setSearchQuery] = useState('');
-  const [savedConcerts, setSavedConcerts] = useState<SavedConcert[]>([]);
+  const [scannedConcerts, setScannedConcerts] = useState<SavedConcert[]>([]);
 
   useEffect(() => {
-    // Load saved concerts from local storage
-    const concerts = getSavedConcerts();
-    setSavedConcerts(concerts);
+    // Load scanned concerts from local storage
+    const concerts = getScannedConcerts();
+    setScannedConcerts(concerts);
   }, []);
 
   const currentDate = new Date();
   
-  const filteredConcerts = savedConcerts
+  const filteredConcerts = scannedConcerts
     .filter(concert => {
       const concertDate = new Date(concert.date);
       if (activeTab === 'upcoming') {
@@ -29,8 +29,9 @@ export default function Home() {
     })
     .filter(concert => 
       concert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      concert.location.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+      concert.venue.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
     <main className="min-h-screen flex flex-col bg-[#2B2F3E]">
@@ -109,7 +110,7 @@ export default function Home() {
         </div>
 
         <section className="px-6 pb-24">
-          {savedConcerts.length === 0 ? (
+          {scannedConcerts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 mb-4">No concerts added yet</p>
               <p className="text-gray-400 text-sm">
@@ -136,8 +137,8 @@ export default function Home() {
                         id={concert.id}
                         title={concert.title}
                         date={concert.date}
-                        venue={concert.location}
-                        circleColor={new Date(concert.date) >= currentDate ? '334934' : 'A5A46B'}
+                        venue={concert.venue}
+                        circleColor={concert.circleColor || 'DEDDED'}
                       />
                     </div>
                   </div>

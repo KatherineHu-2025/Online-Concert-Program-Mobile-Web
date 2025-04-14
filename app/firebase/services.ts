@@ -6,6 +6,7 @@ export interface Concert {
   date: string;
   location: string;
   title: string;
+  circleColor?: string;
   performers?: {
     name: string;
     type: string;

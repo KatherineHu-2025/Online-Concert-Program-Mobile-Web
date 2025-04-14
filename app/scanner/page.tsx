@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import { getConcertById } from '../firebase/services';
-import { saveConcert } from '../utils/concertStorage';
+import { addScannedConcert } from '../utils/concertStorage';
 
 export default function ScannerPage() {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -39,7 +39,13 @@ export default function ScannerPage() {
       // Fetch and save the concert data
       const concertData = await getConcertById(concertId);
       if (concertData) {
-        saveConcert(concertId, concertData);
+        addScannedConcert({
+          id: concertId,
+          title: concertData.title,
+          date: concertData.date,
+          venue: concertData.location,
+          circleColor: concertData.circleColor || 'DEDDED'
+        });
         router.push(`/concert/${concertId}`);
       } else {
         setError("Concert not found");
