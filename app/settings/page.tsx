@@ -13,16 +13,16 @@ const Settings = () => {
       {/* Main Content */}
       <main className="flex-1 bg-[#FEFBF4] p-4 pb-24">
         {/* Profile Section */}
-        <div className="mb-8">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-[#6B4E5B] rounded-full"></div>
             <div>
-              <h2 className="text-xl text-[#2B2F3E]">Name</h2>
-              <Link href="/create-account" className="text-sm text-gray-600 underline">
+              <h2 className="text-xl font-semibold text-[#3B3C50]">Name</h2>
+              <Link href="/create-account" className="text-[#3B3C50] underline">
                 Create an Account
               </Link>
               <br />
-              <Link href="/sign-in" className="text-sm text-gray-600 underline">
+              <Link href="/sign-in" className="text-[#3B3C50] underline">
                 Sign in to your Account
               </Link>
             </div>
@@ -30,7 +30,7 @@ const Settings = () => {
         </div>
 
         {/* Mode Settings */}
-        <div className="space-y-6">
+        <div className="space-y-6 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <svg className="w-6 h-6 text-[#2B2F3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,6 +57,22 @@ const Settings = () => {
             </label>
           </div>
         </div>
+
+        {/* Saved Concerts Link */}
+        <Link href="/saved" className="block">
+          <div className="flex items-center justify-between p-4 bg-[#7472B3] rounded-lg">
+            <div className="flex items-center gap-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17.5L5 21V5Z" 
+                  stroke="#DEDDED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className="text-lg text-[#DEDDED]">Saved Concerts</span>
+            </div>
+            <svg className="w-6 h-6 text-[#DEDDED]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </Link>
       </main>
 
       {/* Navigation Bar */}
