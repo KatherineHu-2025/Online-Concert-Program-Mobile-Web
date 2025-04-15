@@ -80,7 +80,12 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
           <div className="flex flex-col items-center gap-2">
             <div 
               className="w-8 h-8 rounded-full flex-shrink-0 border-2 border-[#FEFBF4]"
-              style={{ backgroundColor: `#${circleColor}`, opacity: 1 }}
+              style={{ 
+                backgroundColor: circleColor ? 
+                  (circleColor.startsWith('#') ? circleColor : `#${circleColor}`) 
+                  : '#DEDDED',
+                opacity: 1 
+              }}
             />
             <button 
               onClick={handleSave}
