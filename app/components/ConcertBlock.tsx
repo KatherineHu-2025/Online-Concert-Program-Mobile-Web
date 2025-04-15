@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getSavedConcerts, saveConcert, unsaveConcert } from '../utils/concertStorage';
+import { useRouter } from 'next/navigation';
+import { addJournalEntry, getJournalEntries } from '../utils/journalStorage';
 
 interface ConcertBlockProps {
   id: string;
@@ -12,6 +14,8 @@ interface ConcertBlockProps {
 
 const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, circleColor }) => {
   const [isSaved, setIsSaved] = useState(false);
+  const router = useRouter();
+  const isPastConcert = new Date(date) < new Date();
 
   useEffect(() => {
     const savedConcerts = getSavedConcerts();
@@ -34,11 +38,38 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
     setIsSaved(!isSaved);
   };
 
+  const handleCreateJournal = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
+    
+    // Check if an entry for this concert already exists by title only
+    const entries = getJournalEntries();
+    const existingEntry = entries.find(entry => entry.title === title);
+
+    if (existingEntry) {
+      // If entry exists, navigate to its edit page
+      router.push(`/journal/${existingEntry.id}`);
+      return;
+    }
+
+    // If no entry exists, create a new one
+    const journalEntry = {
+      id: Date.now().toString(),
+      title: title,
+      date: new Date(date).toISOString().slice(0, 16), // Format date for datetime-local input
+      venue: venue,
+      rating: 0,
+      content: '',
+      preview: ''
+    };
+    addJournalEntry(journalEntry);
+    router.push('/journal/new');
+  };
+
   return (
     <Link href={`/concert/${id}`}>
       <div 
         className="rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow text-[#FEFBF4] relative"
-        style={{ backgroundColor: new Date(date) >= new Date() ? '#334934' : '#A5A46B' }}
+        style={{ backgroundColor: isPastConcert ? '#A5A46B' : '#334934' }}
       >
         <div className="flex justify-between items-start">
           <div>
@@ -60,6 +91,16 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
                   stroke="#FEFBF4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
+            {isPastConcert && (
+              <button
+                onClick={handleCreateJournal}
+                className="w-8 h-8 flex items-center justify-center"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FEFBF4" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -67,4 +108,4 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
   );
 };
 
-export default ConcertBlock; 
+export default ConcertBlock;
