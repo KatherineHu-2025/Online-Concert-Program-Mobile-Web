@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '../../../components/Navbar';
 import { getConcertById } from '../../../firebase/services';
 import { usePathname } from 'next/navigation';
@@ -96,13 +97,32 @@ export default function ProgramPage() {
         </h1>
       </div>
 
+      {/* Header with background image */}
+      <div className="relative h-[200px]">
+        <Image
+          src="/orchestra-bg.jpg"
+          alt="Orchestra performing"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-[#2D2F3D] opacity-60"></div>
+        
+        {/* Concert Title */}
+        <div className="relative z-10 h-full flex items-end pb-3">
+          <h2 className="text-white text-2xl font-bold px-4">
+            {concert?.title}
+          </h2>
+        </div>
+      </div>
+
       {/* Program Section */}
-      <div className="px-4 pt-6 pb-24 max-w-2xl mx-auto">
-        <h2 className="text-[#2D2F3D] text-3xl font-bold mb-8 text-center">Program</h2>
+      <div className="px-4 py-6">
+        <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Program</h2>
         <div className="bg-[#E5EFE7] rounded-2xl overflow-hidden">
           <div className="p-8 min-h-[calc(100vh-24rem)] overflow-y-auto">
-            {concert.programs && concert.programs.length > 0 ? (
-              concert.programs.map((item: ProgramItemType, index: number) => (
+            {concert?.programs && concert.programs.length > 0 ? (
+              concert.programs.map((item, index) => (
                 <div key={index} className="mb-12 last:mb-0">
                   {item.piece === "Intermission" ? (
                     <div className="text-center italic text-xl tracking-widest my-16">
@@ -143,8 +163,8 @@ export default function ProgramPage() {
                 </div>
               ))
             ) : (
-              <div className="text-center text-gray-600 py-8">
-                No program items available
+              <div className="text-center text-gray-500 py-8">
+                No program information available
               </div>
             )}
           </div>

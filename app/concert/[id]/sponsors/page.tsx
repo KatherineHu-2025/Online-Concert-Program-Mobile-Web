@@ -1,27 +1,50 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '../../../components/Navbar';
+import { getConcertById } from '../../../firebase/services';
+import { usePathname } from 'next/navigation';
+
+interface ConcertType {
+  title: string;
+  sponsorText?: string;
+}
 
 export default function SponsorsPage() {
-  const sponsors = [
-    {
-      title: 'Knobloch Campus Center',
-      description: 'The 600+ seat proscenium theatre is housed within the Knobloch Campus Center along with the Alvarez College Union, creating a seamless relationship between academics, art, entertainment and college community life. For current performances, visit the ticket office or review the seating chart.'
-    },
-    {
-      title: 'Duke Family Performance Hall',
-      description: 'The Duke Family Performance Hall was made possible by a gift from The Duke Endowment, a private foundation that serves the people of North and South Carolina by supporting selected programs in higher education, health care, children\'s welfare and spiritual Life. The Duke Endowment has been a major benefactor to the college during an association that has endured more than 75 years.'
+  const [concert, setConcert] = useState<ConcertType | null>(null);
+  const pathname = usePathname();
+  const concertId = pathname.split('/')[2];
+
+  useEffect(() => {
+    const fetchConcert = async () => {
+      try {
+        const concertData = await getConcertById(concertId);
+        setConcert(concertData as ConcertType);
+      } catch (error) {
+        console.error('Error fetching concert:', error);
+      }
+    };
+
+    if (concertId) {
+      fetchConcert();
     }
-  ];
+  }, [concertId]);
+
+  if (!concert) {
+    return (
+      <div className="min-h-screen bg-[#FEFBF4] font-lora flex items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FEFBF4] font-lora">
       {/* Top title bar */}
       <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4">
-        <Link href="/concert" className="text-xl">
+        <Link href={`/concert/${concertId}`} className="text-xl">
           ←
         </Link>
         <h1 className="text-lg font-bold">
@@ -40,30 +63,27 @@ export default function SponsorsPage() {
         />
         <div className="absolute inset-0 bg-[#2D2F3D] opacity-60"></div>
         
-        {/* Page Title */}
+        {/* Concert Title */}
         <div className="relative z-10 h-full flex items-end pb-3">
           <h2 className="text-white text-2xl font-bold px-4">
-            Sponsors
+            {concert.title}
           </h2>
         </div>
       </div>
 
       {/* Sponsors Section */}
-      <div className="px-4 pt-6 pb-24">
-        <div className="space-y-4">
-          {sponsors.map((sponsor, index) => (
-            <div 
-              key={index} 
-              className="bg-[#A5A46B] rounded-2xl overflow-hidden"
-            >
-              <div className="p-6">
-                <h3 className="font-bold text-lg mb-2 text-white">{sponsor.title}</h3>
-                <p className="text-white/90 leading-relaxed">
-                  {sponsor.description}
-                </p>
-              </div>
-            </div>
-          ))}
+      <div className="px-4 py-6">
+        <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Sponsors</h2>
+        <div className="bg-[#A5A46B] rounded-2xl p-6 text-white">
+          {concert.sponsorText ? (
+            <p className="text-lg leading-relaxed whitespace-pre-wrap">
+              {concert.sponsorText}
+            </p>
+          ) : (
+            <p className="text-lg text-center italic">
+              No sponsor information available
+            </p>
+          )}
         </div>
       </div>
 

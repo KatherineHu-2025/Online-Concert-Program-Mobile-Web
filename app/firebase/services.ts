@@ -6,11 +6,17 @@ export interface Concert {
   date: string;
   location: string;
   title: string;
-  circleColor?: string;
+  color?: string;
+  createBy?: string;
+  performanceGroup?: string;
+  performanceGroupBio?: string;
+  sponsorText?: string;
   performers?: {
     name: string;
     type: string;
     imageUrl?: string;
+    bio?: string;
+    role?: string;
   }[];
   programs?: {
     composer: string;

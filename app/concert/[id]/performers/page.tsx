@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation';
 interface PerformerType {
   name: string;
   type: string;
+  role?: string;
   imageUrl?: string;
   description?: string;
 }
@@ -88,9 +89,9 @@ export default function PerformersPage() {
             <PerformerCard
               key={index}
               name={performer.name}
-              type={performer.type}
-              imageUrl={performer.imageUrl || '/performer-placeholder.jpg'}
-              description={performer.description || `${performer.name} - ${performer.type}`}
+              type={performer.role || performer.type}
+              imageUrl="/single-avatar.svg"
+              isGroup={false}
             />
           ))}
           {concert.performanceGroup && (
@@ -98,8 +99,8 @@ export default function PerformersPage() {
               key="group"
               name={concert.performanceGroup}
               type="group"
-              imageUrl="/orchestra-placeholder.jpg"
-              description={`Performance by ${concert.performanceGroup}`}
+              imageUrl="/group-avatar.svg"
+              isGroup={true}
             />
           )}
         </div>

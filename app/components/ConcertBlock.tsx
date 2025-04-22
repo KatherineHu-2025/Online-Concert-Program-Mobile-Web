@@ -18,6 +18,15 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
     setIsSaved(savedConcerts.some(concert => concert.id === id));
   }, [id]);
 
+  // Log the incoming color value
+  console.log('Incoming circleColor:', circleColor);
+
+  // Format the color value to handle both formats (with or without #)
+  const formattedColor = circleColor?.startsWith('#') ? circleColor : `#${circleColor || 'DEDDED'}`;
+  
+  // Log the formatted color
+  console.log('Formatted color:', formattedColor);
+
   const handleSave = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation
     if (isSaved) {
@@ -49,7 +58,10 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
           <div className="flex flex-col items-center gap-2">
             <div 
               className="w-8 h-8 rounded-full flex-shrink-0 border-2 border-[#FEFBF4]"
-              style={{ backgroundColor: `#${circleColor}`, opacity: 1 }}
+              style={{ 
+                backgroundColor: formattedColor,
+                opacity: 1
+              }}
             />
             <button 
               onClick={handleSave}

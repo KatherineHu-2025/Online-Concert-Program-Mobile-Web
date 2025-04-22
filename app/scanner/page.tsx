@@ -33,24 +33,25 @@ export default function ScannerPage() {
     await stopScanning();
     
     try {
-      // The QR code should contain the full document ID from Firebase
       const concertId = decodedText;
-      
-      // Fetch and save the concert data
       const concertData = await getConcertById(concertId);
+      console.log('Concert data from Firebase:', concertData);
+      
       if (concertData) {
+        console.log('Color from Firebase:', concertData.circleColor);
         addScannedConcert({
           id: concertId,
           title: concertData.title,
           date: concertData.date,
           venue: concertData.location,
-          circleColor: concertData.circleColor || 'DEDDED'
+          circleColor: concertData.color || '#DEDDED'
         });
         router.push(`/concert/${concertId}`);
       } else {
         setError("Concert not found");
       }
-    } catch {
+    } catch (error) {
+      console.error('Error in handleScanSuccess:', error);
       setError("Invalid QR code format");
     }
   }, [router, stopScanning]);
