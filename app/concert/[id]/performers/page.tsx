@@ -14,12 +14,14 @@ interface PerformerType {
   role?: string;
   imageUrl?: string;
   description?: string;
+  bio?: string;
 }
 
 interface ConcertType {
   title: string;
   performers: PerformerType[];
   performanceGroup?: string;
+  performanceGroupBio?: string;
 }
 
 export default function PerformersPage() {
@@ -90,8 +92,9 @@ export default function PerformersPage() {
               key={index}
               name={performer.name}
               type={performer.role || performer.type}
-              imageUrl="/single-avatar.svg"
+              imageUrl={performer.imageUrl || "/single-avatar.svg"}
               isGroup={false}
+              description={performer.bio || performer.description || ''}
             />
           ))}
           {concert.performanceGroup && (
@@ -101,6 +104,7 @@ export default function PerformersPage() {
               type="group"
               imageUrl="/group-avatar.svg"
               isGroup={true}
+              description={concert.performanceGroupBio || ''}
             />
           )}
         </div>

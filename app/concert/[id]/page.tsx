@@ -110,12 +110,6 @@ export default function ConcertPage() {
           <span className="text-xl">{concert.location}</span>
         </div>
 
-        {concert.sponsorText && (
-          <div className="mb-8 p-4 bg-[#E5EFE7] rounded-lg">
-            <p className="text-gray-700 italic">{concert.sponsorText}</p>
-          </div>
-        )}
-
         {/* Navigation Buttons */}
         <div className="space-y-4">
           <Link href={`/concert/${params.id}/performers`} className="block">

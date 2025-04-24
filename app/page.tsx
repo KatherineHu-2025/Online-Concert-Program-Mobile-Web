@@ -78,7 +78,7 @@ export default function Home() {
                 </div>
                 <div 
                   className={`h-[6px] mx-2 rounded-full ${
-                    activeTab === 'past' ? 'bg-[#A5A46B]' : 'bg-transparent'
+                    activeTab === 'past' ? 'bg-[#734053]' : 'bg-transparent'
                   }`}
                 />
               </div>
