@@ -34,13 +34,14 @@ export default function Home() {
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#2B2F3E]">
-      <header className="text-white p-6 pt-25">
+    <main className="h-screen flex flex-col bg-[#2B2F3E]">
+      <header className="text-white p-6 pt-25 flex-shrink-0">
         <h1 className="text-2xl font-semibold">Interactive Concert Program</h1>
       </header>
 
-      <div className="flex-1 bg-[#FEFBF4]">
-        <div className="p-6">
+      {/* Fixed top controls: Tabs and Search */}
+      <div className="bg-[#FEFBF4] flex-shrink-0 sticky top-0 z-20">
+        <div className="p-6 pb-2">
           {/* Tab Labels and Buttons */}
           <div className="flex items-center">
             {/* Upcoming Concerts Tab */}
@@ -85,7 +86,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mt-4">
+          <div className="relative mt-4 mb-2">
             <input
               type="text"
               placeholder="Search Events"
@@ -108,8 +109,11 @@ export default function Home() {
             </svg>
           </div>
         </div>
+      </div>
 
-        <section className="px-6 pb-24">
+      {/* Scrollable timeline section, height calculated to fit between fixed top and navbar */}
+      <div className="flex-1 bg-[#FEFBF4] overflow-y-auto" style={{ minHeight: 0 }}>
+        <section className="px-6 pb-32 pt-2">
           {scannedConcerts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 mb-4">No concerts added yet</p>
@@ -118,27 +122,25 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="relative">
+            <div className="relative z-0">
               {/* Continuous Timeline Line */}
-              <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-[#C7CCE6]" />
-              
+              <div className="absolute left-4 top-4 bottom-24 w-0.5 bg-[#C7CCE6] z-0" />
               <div className="space-y-4">
                 {filteredConcerts.map((concert) => (
                   <div key={concert.id} className="flex gap-4">
                     {/* Timeline Node */}
-                    <div className="relative z-10">
+                    <div className="relative z-0">
                       <div className="w-8 h-8 rounded-full bg-[#7472B3] flex items-center justify-center text-[#FEFBF4] text-xs font-bold">
                         {new Date(concert.date).toLocaleString('default', { month: 'short' }).toUpperCase()}
                       </div>
                     </div>
-                    
                     <div className="flex-1">
                       <ConcertBlock
                         id={concert.id}
                         title={concert.title}
                         date={concert.date}
                         venue={concert.venue}
-                        circleColor={concert.circleColor || 'DEDDED'}
+                        circleColor={concert.circleColor || (concert as any).color || 'DEDDED'}
                       />
                     </div>
                   </div>
