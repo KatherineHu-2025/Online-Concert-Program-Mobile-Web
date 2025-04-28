@@ -74,7 +74,7 @@ export default function SavedConcerts() {
                       title={concert.title}
                       date={concert.date}
                       venue={concert.venue}
-                      circleColor={concert.circleColor}
+                      circleColor={concert.circleColor || concert.color || 'DEDDED'}
                     />
                   </div>
                 </div>

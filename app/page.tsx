@@ -140,7 +140,7 @@ export default function Home() {
                         title={concert.title}
                         date={concert.date}
                         venue={concert.venue}
-                        circleColor={concert.circleColor || (concert as any).color || 'DEDDED'}
+                        circleColor={concert.circleColor || concert.color || 'DEDDED'}
                       />
                     </div>
                   </div>

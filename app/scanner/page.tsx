@@ -22,10 +22,13 @@ export default function ScannerPage() {
       try {
         await html5QrCode.current.stop();
         setIsScanning(false);
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (
-          typeof error?.message === 'string' &&
-          error.message.includes('Cannot stop, scanner is not running or paused')
+          error &&
+          typeof error === 'object' &&
+          'message' in error &&
+          typeof (error as { message?: unknown }).message === 'string' &&
+          (error as { message: string }).message.includes('Cannot stop, scanner is not running or paused')
         ) {
           // Ignore this error completely
           setIsScanning(false);
