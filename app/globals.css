@@ -66,3 +66,39 @@ body {
   border-radius: 0.375rem !important;
   margin: 8px !important;
 }
+
+/* Custom scrollbar for concert list */
+.concert-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #F2C3B3 #FEFBF4;
+}
+.concert-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 16px;
+}
+.concert-scrollbar::-webkit-scrollbar-thumb {
+  background: #F2C3B3;
+  border-radius: 16px;
+}
+.concert-scrollbar::-webkit-scrollbar-track {
+  background: #FEFBF4;
+  border-radius: 16px;
+}
+
+/* Custom scrollbar for program notes modal */
+.program-modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #7472B3 #DEDDED;
+  padding-inline-end: 8px;
+}
+.program-modal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.program-modal-scrollbar::-webkit-scrollbar-thumb {
+  background: #7472B3;
+  border-radius: 16px;
+}
+.program-modal-scrollbar::-webkit-scrollbar-track {
+  background: #DEDDED;
+  border-radius: 16px;
+}

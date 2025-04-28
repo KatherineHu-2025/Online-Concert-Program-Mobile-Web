@@ -41,8 +41,8 @@ const PerformerModal: React.FC<PerformerModalProps> = ({
         </button>
 
         {/* Scrollable Content */}
-        <div className="max-h-[500px] overflow-y-auto pr-3">
-          <div className="px-6 pt-6 pb-8 pr-3">
+        <div className="max-h-[500px] overflow-y-auto pr-6 pt-2 pb-2 program-modal-scrollbar">
+          <div className="px-6 pt-6 pb-8">
             <div className="flex items-center gap-3 mb-5">
               <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#7472B3]">
                 <Image

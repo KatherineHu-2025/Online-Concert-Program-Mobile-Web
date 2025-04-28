@@ -112,7 +112,7 @@ export default function Home() {
       </div>
 
       {/* Scrollable timeline section, height calculated to fit between fixed top and navbar */}
-      <div className="flex-1 bg-[#FEFBF4] overflow-y-auto" style={{ minHeight: 0 }}>
+      <div className="flex-1 bg-[#FEFBF4] overflow-y-auto concert-scrollbar" style={{ minHeight: 0 }}>
         <section className="px-6 pb-32 pt-2">
           {scannedConcerts.length === 0 ? (
             <div className="text-center py-12">

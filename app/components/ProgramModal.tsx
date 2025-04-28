@@ -40,7 +40,7 @@ const ProgramModal: React.FC<ProgramModalProps> = ({
         </button>
 
         {/* Scrollable Content */}
-        <div className="max-h-[500px] overflow-y-auto pr-3">
+        <div className="max-h-[500px] overflow-y-auto pr-6 pt-2 pb-2 program-modal-scrollbar">
           <div className="px-6 pt-6 pb-8 pr-3">
             <div className="mb-5">
               <h3 className="text-2xl text-[#3B3C50] font-lora mb-1">{title}</h3>

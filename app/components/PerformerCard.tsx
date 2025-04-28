@@ -22,7 +22,7 @@ const PerformerCard: React.FC<PerformerCardProps> = ({
   return (
     <>
       <div 
-        className="bg-[#6D4C5E] rounded-2xl p-4 mb-4 text-white cursor-pointer hover:bg-[#7d596c] transition-colors"
+        className="bg-[#734053] rounded-2xl p-4 mb-4 text-white cursor-pointer hover:bg-[#8a5a6e] transition-colors"
         onClick={() => setIsModalOpen(true)}
       >
         <div className="flex items-center gap-4">

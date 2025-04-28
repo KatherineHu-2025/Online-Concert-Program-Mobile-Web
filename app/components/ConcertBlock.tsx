@@ -55,7 +55,17 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-lg font-semibold mb-0.5">{title}</h3>
-            <p>{date}</p>
+            <p>{(() => {
+              const dateObj = new Date(date);
+              return dateObj.toLocaleString(undefined, {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+              });
+            })()}</p>
             <p>{venue}</p>
           </div>
           <div className="flex flex-col items-center gap-2">

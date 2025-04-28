@@ -22,8 +22,16 @@ export default function ScannerPage() {
       try {
         await html5QrCode.current.stop();
         setIsScanning(false);
-      } catch (error) {
-        console.error("Error stopping scanner:", error);
+      } catch (error: any) {
+        if (
+          typeof error?.message === 'string' &&
+          error.message.includes('Cannot stop, scanner is not running or paused')
+        ) {
+          // Ignore this error completely
+          setIsScanning(false);
+        } else {
+          // Only log unexpected errors
+        }
       }
     }
   }, [isScanning]);
