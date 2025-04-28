@@ -109,7 +109,7 @@ export default function JournalEntryPage() {
                   type="text"
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}
-                  className="text-2xl font-bold text-[#2D2F3D] mb-2 p-2 border border-gray-300 rounded-lg"
+                  className="text-2xl font-bold text-[#7472B3] mb-2 p-2 border border-gray-300 rounded-lg"
                 />
                 <div className="flex mb-2">
                   {[...Array(5)].map((_, index) => (

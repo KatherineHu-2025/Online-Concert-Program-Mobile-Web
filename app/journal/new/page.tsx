@@ -1,39 +1,36 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { addJournalEntry, getJournalEntries, updateJournalEntry, JournalEntry } from '../../utils/journalStorage';
+import { addJournalEntry, updateJournalEntry } from '../../utils/journalStorage';
 
 export default function NewJournalEntry() {
   const router = useRouter();
-  const [entryId, setEntryId] = useState<string | null>(null);
+  const searchParams = useSearchParams();
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [venue, setVenue] = useState('');
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState('');
 
-  useEffect(() => {
-    // Get the most recently added entry
-    const entries = getJournalEntries();
-    const latestEntry = entries[entries.length - 1];
-    
-    if (latestEntry) {
-      setEntryId(latestEntry.id);
-      setTitle(latestEntry.title);
-      setDate(latestEntry.date);
-      setVenue(latestEntry.venue);
-      setRating(latestEntry.rating);
-      setContent(latestEntry.content);
+  React.useEffect(() => {
+    // Only pre-populate if query params exist
+    const titleParam = searchParams.get('title');
+    const dateParam = searchParams.get('date');
+    const venueParam = searchParams.get('venue');
+    if (titleParam || dateParam || venueParam) {
+      setTitle(titleParam || '');
+      setDate(dateParam || '');
+      setVenue(venueParam || '');
     }
-  }, []);
+  }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const entry = {
-      id: entryId || Date.now().toString(),
+      id: Date.now().toString(),
       title,
       date,
       venue,
@@ -42,11 +39,7 @@ export default function NewJournalEntry() {
       preview: content.slice(0, 100) + (content.length > 100 ? '...' : '')
     };
 
-    if (entryId) {
-      updateJournalEntry(entryId, entry);
-    } else {
-      addJournalEntry(entry);
-    }
+    addJournalEntry(entry);
     
     router.push('/journal');
   };
@@ -70,8 +63,9 @@ export default function NewJournalEntry() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg text-2xl font-bold text-[#2D2F3D]"
+              className="w-full p-2 border border-[#7472B3] rounded-lg text-2xl font-bold text-[#7472B3]"
               required
+              placeholder="Title"
             />
           </div>
 
@@ -93,7 +87,7 @@ export default function NewJournalEntry() {
               type="datetime-local"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg text-gray-600"
+              className="w-full p-2 border border-[#7472B3] rounded-lg text-[#7472B3]"
               required
             />
           </div>
@@ -103,8 +97,9 @@ export default function NewJournalEntry() {
               type="text"
               value={venue}
               onChange={(e) => setVenue(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg text-gray-600"
+              className="w-full p-2 border border-[#7472B3] rounded-lg text-[#7472B3]"
               required
+              placeholder="Location"
             />
           </div>
 
@@ -112,7 +107,7 @@ export default function NewJournalEntry() {
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg h-48 bg-white text-[#2D2F3D]"
+              className="w-full p-2 border border-[#7472B3] rounded-lg h-48 bg-white text-[#2D2F3D] placeholder-[#7472B3]"
               placeholder="Write your thoughts here..."
               required
             />
@@ -133,6 +128,17 @@ export default function NewJournalEntry() {
           </div>
         </form>
       </div>
+
+      <style jsx global>{`
+        input[type='datetime-local']::-webkit-calendar-picker-indicator {
+          filter: invert(36%) sepia(16%) saturate(1162%) hue-rotate(208deg) brightness(91%) contrast(91%);
+        }
+        input:focus, textarea:focus {
+          outline: 2px solid #F2C3B3 !important;
+          box-shadow: 0 0 0 2px #F2C3B3 !important;
+          border-color: #F2C3B3 !important;
+        }
+      `}</style>
     </main>
   );
 } 

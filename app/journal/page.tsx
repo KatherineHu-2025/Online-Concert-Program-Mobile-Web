@@ -32,7 +32,7 @@ export default function Journal() {
           <h2 className="text-2xl font-bold text-[#2D2F3D]">Journal</h2>
           <Link 
             href="/journal/new" 
-            className="px-4 py-2 bg-[#F2C3B3] text-[#FEFBF4] rounded-lg hover:opacity-90 transition-opacity"
+            className="px-4 py-2 bg-[#F2C3B3] text-[#2D2F3D] rounded-lg hover:opacity-90 transition-opacity"
           >
             New Entry
           </Link>

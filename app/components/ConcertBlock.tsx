@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getSavedConcerts, saveConcert, unsaveConcert } from '../utils/concertStorage';
+import { getJournalEntries } from '../utils/journalStorage';
 import { useRouter } from 'next/navigation';
-import { addJournalEntry, getJournalEntries } from '../utils/journalStorage';
 
 interface ConcertBlockProps {
   id: string;
@@ -51,18 +51,13 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
       return;
     }
 
-    // If no entry exists, create a new one
-    const journalEntry = {
-      id: Date.now().toString(),
-      title: title,
-      date: new Date(date).toISOString().slice(0, 16), // Format date for datetime-local input
-      venue: venue,
-      rating: 0,
-      content: '',
-      preview: ''
-    };
-    addJournalEntry(journalEntry);
-    router.push('/journal/new');
+    // If no entry exists, navigate to /journal/new with concert info as query params
+    const params = new URLSearchParams({
+      title,
+      date: new Date(date).toISOString().slice(0, 16),
+      venue
+    });
+    router.push(`/journal/new?${params.toString()}`);
   };
 
   return (
