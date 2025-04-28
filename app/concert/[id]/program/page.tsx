@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '../../../components/Navbar';
+import ProgramModal from '../../../components/ProgramModal';
 import { getConcertById } from '../../../firebase/services';
 import { usePathname } from 'next/navigation';
 
@@ -19,42 +20,6 @@ interface ConcertType {
   title: string;
   programs: ProgramItemType[];
 }
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  composer: string;
-  notes: string;
-}
-
-const NotesModal: React.FC<ModalProps> = ({ isOpen, onClose, title, composer, notes }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-hidden">
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h3 className="text-xl font-bold text-[#2D2F3D] mb-2">{title}</h3>
-              <p className="text-gray-600">{composer}</p>
-            </div>
-            <button 
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-2xl"
-            >
-              ×
-            </button>
-          </div>
-          <div className="prose max-w-none overflow-y-auto whitespace-pre-wrap">
-            {notes}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default function ProgramPage() {
   const [concert, setConcert] = useState<ConcertType | null>(null);
@@ -171,12 +136,13 @@ export default function ProgramPage() {
         </div>
       </div>
 
-      <NotesModal
+      <ProgramModal
         isOpen={selectedPiece !== null}
         onClose={() => setSelectedPiece(null)}
         title={selectedPiece?.piece || ''}
         composer={selectedPiece?.composer || ''}
         notes={selectedPiece?.notes || ''}
+        years={selectedPiece?.years}
       />
 
       <Navbar />

@@ -3,7 +3,8 @@ export interface SavedConcert {
   title: string;
   date: string;
   venue: string;
-  circleColor: string;
+  circleColor?: string;
+  color?: string;
 }
 
 const SAVED_CONCERTS_KEY = 'savedConcerts';

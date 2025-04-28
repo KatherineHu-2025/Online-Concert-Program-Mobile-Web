@@ -53,7 +53,7 @@ export default function ConcertPage() {
         {/* Navigation Buttons */}
         <div className="space-y-4">
           <Link href="/concert/performers" className="block">
-            <button className="w-full py-2.5 px-6 bg-[#6D4C5E] text-white rounded-2xl text-xl font-semibold">
+            <button className="w-full py-2.5 px-6 bg-[#734053] text-white rounded-2xl text-xl font-semibold">
               Performers
             </button>
           </Link>

@@ -7,6 +7,7 @@ export interface Concert {
   location: string;
   title: string;
   color?: string;
+  circleColor?: string;
   createBy?: string;
   performanceGroup?: string;
   performanceGroupBio?: string;

@@ -1,22 +1,21 @@
 import React from 'react';
-import Image from 'next/image';
 
-interface PerformerModalProps {
+interface ProgramModalProps {
   isOpen: boolean;
   onClose: () => void;
-  name: string;
-  type: string;
-  imageUrl: string;
-  description: string;
+  title: string;
+  composer: string;
+  notes: string;
+  years?: string;
 }
 
-const PerformerModal: React.FC<PerformerModalProps> = ({
+const ProgramModal: React.FC<ProgramModalProps> = ({
   isOpen,
   onClose,
-  name,
-  type,
-  imageUrl,
-  description
+  title,
+  composer,
+  notes,
+  years
 }) => {
   if (!isOpen) return null;
 
@@ -42,19 +41,12 @@ const PerformerModal: React.FC<PerformerModalProps> = ({
 
         {/* Scrollable Content */}
         <div className="max-h-[500px] overflow-y-auto pr-6 pt-2 pb-2 program-modal-scrollbar">
-          <div className="px-6 pt-6 pb-8">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden bg-[#7472B3]">
-                <Image
-                  src={imageUrl}
-                  alt={name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div>
-                <h3 className="text-2xl text-[#3B3C50] font-lora">{name}</h3>
-                <p className="text-[#3B3C50]/80 italic">{type}</p>
+          <div className="px-6 pt-6 pb-8 pr-3">
+            <div className="mb-5">
+              <h3 className="text-2xl text-[#3B3C50] font-lora mb-1">{title}</h3>
+              <div className="text-[#3B3C50]/80">
+                <p className="italic">{composer}</p>
+                {years && <p className="text-sm">({years})</p>}
               </div>
             </div>
 
@@ -75,9 +67,9 @@ const PerformerModal: React.FC<PerformerModalProps> = ({
               </div>
             </div>
 
-            {/* Description */}
+            {/* Notes */}
             <div className="text-[#3B3C50] space-y-4">
-              {description.split('\n\n').map((paragraph, index) => (
+              {notes.split('\n\n').map((paragraph, index) => (
                 <p key={index} className="leading-relaxed">{paragraph}</p>
               ))}
             </div>
@@ -88,4 +80,4 @@ const PerformerModal: React.FC<PerformerModalProps> = ({
   );
 };
 
-export default PerformerModal; 
+export default ProgramModal; 

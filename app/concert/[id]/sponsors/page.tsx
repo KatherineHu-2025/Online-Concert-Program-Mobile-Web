@@ -74,7 +74,7 @@ export default function SponsorsPage() {
       {/* Sponsors Section */}
       <div className="px-4 py-6">
         <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Sponsors</h2>
-        <div className="bg-[#A5A46B] rounded-2xl p-6 text-white">
+        <div className="bg-[#334934] rounded-2xl p-6 text-white">
           {concert.sponsorText ? (
             <p className="text-lg leading-relaxed whitespace-pre-wrap">
               {concert.sponsorText}

@@ -102,7 +102,19 @@ export default function ConcertPage() {
       <div className="px-4 py-6">
         <div className="flex items-center gap-2 text-gray-700 mb-4">
           <CalendarIcon className="h-6 w-6" />
-          <span className="text-xl">{concert.date}</span>
+          <span className="text-xl">{
+            (() => {
+              const dateObj = new Date(concert.date);
+              return dateObj.toLocaleString(undefined, {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+              });
+            })()
+          }</span>
         </div>
         
         <div className="flex items-center gap-2 text-gray-700 mb-8">
@@ -110,16 +122,10 @@ export default function ConcertPage() {
           <span className="text-xl">{concert.location}</span>
         </div>
 
-        {concert.sponsorText && (
-          <div className="mb-8 p-4 bg-[#E5EFE7] rounded-lg">
-            <p className="text-gray-700 italic">{concert.sponsorText}</p>
-          </div>
-        )}
-
         {/* Navigation Buttons */}
         <div className="space-y-4">
           <Link href={`/concert/${params.id}/performers`} className="block">
-            <button className="w-full py-2.5 px-6 bg-[#6D4C5E] text-white rounded-2xl text-xl font-semibold">
+            <button className="w-full py-2.5 px-6 bg-[#734053] text-white rounded-2xl text-xl font-semibold">
               Performers
             </button>
           </Link>
@@ -131,7 +137,7 @@ export default function ConcertPage() {
           </Link>
           
           <Link href={`/concert/${params.id}/sponsors`} className="block">
-            <button className="w-full py-2.5 px-6 bg-[#A5A46B] text-white rounded-2xl text-xl font-semibold">
+            <button className="w-full py-2.5 px-6 bg-[#334934] text-white rounded-2xl text-xl font-semibold">
               Sponsors
             </button>
           </Link>
