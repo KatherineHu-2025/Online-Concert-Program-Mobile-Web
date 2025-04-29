@@ -1,5 +1,5 @@
 import { db } from './config';
-import { doc, getDoc, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, Timestamp, getDocs, query, where, collection } from 'firebase/firestore';
 
 export interface Concert {
   concertType: string;
@@ -47,5 +47,30 @@ export async function getConcertById(concertId: string): Promise<Concert | null>
   } catch (error) {
     console.error('Error fetching concert:', error);
     return null;
+  }
+}
+
+// New function to verify multiple concerts exist
+export async function verifyConcertsExist(concertIds: string[]): Promise<string[]> {
+  try {
+    const existingConcerts: string[] = [];
+    
+    // Process in batches of 10 to avoid too many concurrent requests
+    for (let i = 0; i < concertIds.length; i += 10) {
+      const batch = concertIds.slice(i, i + 10);
+      const promises = batch.map(async (id) => {
+        const concertRef = doc(db, 'publicEvents', id);
+        const concertSnap = await getDoc(concertRef);
+        if (concertSnap.exists()) {
+          existingConcerts.push(id);
+        }
+      });
+      await Promise.all(promises);
+    }
+    
+    return existingConcerts;
+  } catch (error) {
+    console.error('Error verifying concerts:', error);
+    return [];
   }
 } 

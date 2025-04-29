@@ -3,17 +3,52 @@
 import React, { useState, useEffect } from 'react';
 import ConcertBlock from './components/ConcertBlock';
 import Navbar from './components/Navbar';
-import { getScannedConcerts, SavedConcert } from './utils/concertStorage';
+import { getScannedConcerts, SavedConcert, syncConcertsWithFirebase, getLastSyncTime } from './utils/concertStorage';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [searchQuery, setSearchQuery] = useState('');
   const [scannedConcerts, setScannedConcerts] = useState<SavedConcert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load scanned concerts from local storage
-    const concerts = getScannedConcerts();
-    setScannedConcerts(concerts);
+    async function loadAndSyncConcerts() {
+      setIsLoading(true);
+      try {
+        // Load initial concerts from local storage
+        const concerts = getScannedConcerts();
+        setScannedConcerts(concerts);
+
+        // Check if we need to sync (every 5 minutes)
+        const lastSync = getLastSyncTime();
+        const fiveMinutes = 5 * 60 * 1000;
+        if (Date.now() - lastSync > fiveMinutes) {
+          await syncConcertsWithFirebase();
+          // Reload concerts after sync
+          const updatedConcerts = getScannedConcerts();
+          setScannedConcerts(updatedConcerts);
+        }
+      } catch (error) {
+        console.error('Error loading concerts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadAndSyncConcerts();
+
+    // Set up periodic sync every 5 minutes
+    const syncInterval = setInterval(async () => {
+      try {
+        await syncConcertsWithFirebase();
+        const updatedConcerts = getScannedConcerts();
+        setScannedConcerts(updatedConcerts);
+      } catch (error) {
+        console.error('Error during periodic sync:', error);
+      }
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(syncInterval);
   }, []);
 
   const currentDate = new Date();
