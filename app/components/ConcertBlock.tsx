@@ -13,26 +13,37 @@ interface ConcertBlockProps {
 }
 
 const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, circleColor }) => {
+  const [mounted, setMounted] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const router = useRouter();
-  const isPastConcert = new Date(date) < new Date();
+  
+  const [isPastConcert, setIsPastConcert] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const savedConcerts = getSavedConcerts();
     setIsSaved(savedConcerts.some(concert => concert.id === id));
-  }, [id]);
+    setIsPastConcert(new Date(date) < new Date());
+  }, [id, date]);
 
-  // Log the incoming color value
-  console.log('Incoming circleColor:', circleColor);
+  if (!mounted) {
+    return (
+      <div className="rounded-lg p-4 shadow-sm text-[#FEFBF4] relative" style={{ backgroundColor: '#334934' }}>
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-lg font-semibold mb-0.5">{title}</h3>
+            <p className="opacity-90">{date}</p>
+            <p className="opacity-80">{venue}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  // Format the color value to handle both formats (with or without #)
   const formattedColor = circleColor?.startsWith('#') ? circleColor : `#${circleColor || 'DEDDED'}`;
-  
-  // Log the formatted color
-  console.log('Formatted color:', formattedColor);
 
   const handleSave = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
+    e.preventDefault();
     if (isSaved) {
       unsaveConcert(id);
     } else {
@@ -48,19 +59,15 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
   };
 
   const handleCreateJournal = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    
-    // Check if an entry for this concert already exists by title only
+    e.preventDefault();
     const entries = getJournalEntries();
     const existingEntry = entries.find(entry => entry.title === title);
 
     if (existingEntry) {
-      // If entry exists, navigate to its edit page
       router.push(`/journal/${existingEntry.id}`);
       return;
     }
 
-    // If no entry exists, navigate to /journal/new with concert info as query params
     const params = new URLSearchParams({
       title,
       date: new Date(date).toISOString().slice(0, 16),
@@ -73,7 +80,7 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
     <Link href={`/concert/${id}`}>
       <div 
         className="rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow text-[#FEFBF4] relative"
-        style={{ backgroundColor: new Date(date) >= new Date() ? '#334934' : '#A5A46B' }}
+        style={{ backgroundColor: isPastConcert ? '#A5A46B' : '#334934' }}
       >
         <div className="flex justify-between items-start">
           <div>
@@ -84,7 +91,7 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
           <div className="flex flex-col items-center gap-2">
             <div 
               className="w-8 h-8 rounded-full flex-shrink-0 border-2 border-[#FEFBF4]"
-              style={{ backgroundColor: `#${circleColor}`, opacity: 1 }}
+              style={{ backgroundColor: formattedColor, opacity: 1 }}
             />
             <button 
               onClick={handleSave}
