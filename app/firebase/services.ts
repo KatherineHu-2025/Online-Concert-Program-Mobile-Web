@@ -25,6 +25,7 @@ export interface Concert {
     notes?: string;
   }[];
   customSections?: Record<string, string | number | boolean | null>;
+  duration?: string;
 }
 
 export async function getConcertById(concertId: string): Promise<Concert | null> {

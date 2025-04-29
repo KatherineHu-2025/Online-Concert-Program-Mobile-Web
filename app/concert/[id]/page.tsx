@@ -117,9 +117,20 @@ export default function ConcertPage() {
           }</span>
         </div>
         
-        <div className="flex items-center gap-2 text-gray-700 mb-8">
+        <div className="flex items-center gap-2 text-gray-700 mb-4">
           <MapPinIcon className="h-6 w-6" />
           <span className="text-xl">{concert.location}</span>
+        </div>
+
+        {/* Duration Row */}
+        <div className="flex items-center gap-2 text-gray-700 mb-8">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6">
+            <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+            <path d="M12 6v6l4 2" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+          <span className="text-xl">
+            {concert.duration || "--"}
+          </span>
         </div>
 
         {/* Navigation Buttons */}
