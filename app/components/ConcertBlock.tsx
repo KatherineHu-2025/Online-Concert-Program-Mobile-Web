@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getSavedConcerts, saveConcert, unsaveConcert } from '../utils/concertStorage';
 import { getJournalEntries } from '../utils/journalStorage';
 import { useRouter } from 'next/navigation';
+import { CalendarIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
 interface ConcertBlockProps {
   id: string;
@@ -32,8 +33,14 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-lg font-semibold mb-0.5">{title}</h3>
-            <p className="opacity-90">{date}</p>
-            <p className="opacity-80">{venue}</p>
+            <div className="flex items-center gap-1 opacity-90 mb-1">
+              <CalendarIcon className="h-5 w-5" />
+              <p>{date}</p>
+            </div>
+            <div className="flex items-center gap-1 opacity-80">
+              <MapPinIcon className="h-5 w-5" />
+              <p>{venue}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -80,13 +87,19 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
     <Link href={`/concert/${id}`}>
       <div 
         className="rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow text-[#FEFBF4] relative"
-        style={{ backgroundColor: isPastConcert ? '#A5A46B' : '#334934' }}
+        style={{ backgroundColor: isPastConcert ? '#734053' : '#334934' }}
       >
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-lg font-semibold mb-0.5">{title}</h3>
-            <p className="opacity-90">{date}</p>
-            <p className="opacity-80">{venue}</p>
+            <div className="flex items-center gap-1 opacity-90 mb-1">
+              <CalendarIcon className="h-5 w-5" />
+              <p>{date}</p>
+            </div>
+            <div className="flex items-center gap-1 opacity-80">
+              <MapPinIcon className="h-5 w-5" />
+              <p>{venue}</p>
+            </div>
           </div>
           <div className="flex flex-col items-center gap-2">
             <div 
