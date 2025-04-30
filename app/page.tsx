@@ -3,17 +3,52 @@
 import React, { useState, useEffect } from 'react';
 import ConcertBlock from './components/ConcertBlock';
 import Navbar from './components/Navbar';
-import { getScannedConcerts, SavedConcert } from './utils/concertStorage';
+import { getScannedConcerts, SavedConcert, syncConcertsWithFirebase, getLastSyncTime } from './utils/concertStorage';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
   const [searchQuery, setSearchQuery] = useState('');
   const [scannedConcerts, setScannedConcerts] = useState<SavedConcert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load scanned concerts from local storage
-    const concerts = getScannedConcerts();
-    setScannedConcerts(concerts);
+    async function loadAndSyncConcerts() {
+      setIsLoading(true);
+      try {
+        // Load initial concerts from local storage
+        const concerts = getScannedConcerts();
+        setScannedConcerts(concerts);
+
+        // Check if we need to sync (every 5 minutes)
+        const lastSync = getLastSyncTime();
+        const fiveMinutes = 5 * 60 * 1000;
+        if (Date.now() - lastSync > fiveMinutes) {
+          await syncConcertsWithFirebase();
+          // Reload concerts after sync
+          const updatedConcerts = getScannedConcerts();
+          setScannedConcerts(updatedConcerts);
+        }
+      } catch (error) {
+        console.error('Error loading concerts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadAndSyncConcerts();
+
+    // Set up periodic sync every 5 minutes
+    const syncInterval = setInterval(async () => {
+      try {
+        await syncConcertsWithFirebase();
+        const updatedConcerts = getScannedConcerts();
+        setScannedConcerts(updatedConcerts);
+      } catch (error) {
+        console.error('Error during periodic sync:', error);
+      }
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(syncInterval);
   }, []);
 
   const currentDate = new Date();
@@ -111,10 +146,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Scrollable timeline section, height calculated to fit between fixed top and navbar */}
+      {/* Scrollable timeline section */}
       <div className="flex-1 bg-[#FEFBF4] overflow-y-auto concert-scrollbar" style={{ minHeight: 0 }}>
         <section className="px-6 pb-32 pt-2">
-          {scannedConcerts.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 mb-4">Loading concerts...</p>
+            </div>
+          ) : scannedConcerts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 mb-4">No concerts added yet</p>
               <p className="text-gray-400 text-sm">
