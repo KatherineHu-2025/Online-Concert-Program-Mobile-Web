@@ -53,9 +53,9 @@ export default function PerformersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FEFBF4] font-lora">
+    <div className="min-h-screen flex flex-col bg-[#FEFBF4] font-lora">
       {/* Top title bar */}
-      <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4">
+      <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4 flex-shrink-0">
         <Link href={`/concert/${concertId}`} className="text-xl">
           ←
         </Link>
@@ -65,7 +65,7 @@ export default function PerformersPage() {
       </div>
 
       {/* Header with background image */}
-      <div className="relative h-[200px]">
+      <div className="relative h-[200px] flex-shrink-0">
         <Image
           src="/orchestra-bg.jpg"
           alt="Orchestra performing"
@@ -83,34 +83,40 @@ export default function PerformersPage() {
         </div>
       </div>
 
-      {/* Performers Section */}
-      <div className="px-4 py-6">
-        <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Performers</h2>
-        <div>
-          {concert.performers && concert.performers.map((performer: PerformerType, index: number) => (
-            <PerformerCard
-              key={index}
-              name={performer.name}
-              type={performer.role || performer.type}
-              imageUrl={performer.imageUrl || "/single-avatar.svg"}
-              isGroup={false}
-              description={performer.bio || performer.description || ''}
-            />
-          ))}
-          {concert.performanceGroup && (
-            <PerformerCard
-              key="group"
-              name={concert.performanceGroup}
-              type="group"
-              imageUrl="/group-avatar.svg"
-              isGroup={true}
-              description={concert.performanceGroupBio || ''}
-            />
-          )}
+      {/* Main scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Performers Section with bottom padding for navbar */}
+        <div className="px-4 py-6 pb-24">
+          <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Performers</h2>
+          <div>
+            {concert.performers && concert.performers.map((performer: PerformerType, index: number) => (
+              <PerformerCard
+                key={index}
+                name={performer.name}
+                type={performer.role || performer.type}
+                imageUrl={performer.imageUrl || "/single-avatar.svg"}
+                isGroup={false}
+                description={performer.bio || performer.description || ''}
+              />
+            ))}
+            {concert.performanceGroup && (
+              <PerformerCard
+                key="group"
+                name={concert.performanceGroup}
+                type="group"
+                imageUrl="/group-avatar.svg"
+                isGroup={true}
+                description={concert.performanceGroupBio || ''}
+              />
+            )}
+          </div>
         </div>
       </div>
 
-      <Navbar />
+      {/* Fixed navbar at bottom */}
+      <div className="fixed bottom-0 left-0 right-0">
+        <Navbar />
+      </div>
     </div>
   );
 } 

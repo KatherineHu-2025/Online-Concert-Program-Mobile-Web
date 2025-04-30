@@ -41,9 +41,9 @@ export default function SponsorsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FEFBF4] font-lora">
+    <div className="min-h-screen flex flex-col bg-[#FEFBF4] font-lora">
       {/* Top title bar */}
-      <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4">
+      <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4 flex-shrink-0">
         <Link href={`/concert/${concertId}`} className="text-xl">
           ←
         </Link>
@@ -53,7 +53,7 @@ export default function SponsorsPage() {
       </div>
 
       {/* Header with background image */}
-      <div className="relative h-[200px]">
+      <div className="relative h-[200px] flex-shrink-0">
         <Image
           src="/orchestra-bg.jpg"
           alt="Orchestra performing"
@@ -71,23 +71,29 @@ export default function SponsorsPage() {
         </div>
       </div>
 
-      {/* Sponsors Section */}
-      <div className="px-4 py-6">
-        <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Sponsors</h2>
-        <div className="bg-[#334934] rounded-2xl p-6 text-white">
-          {concert.sponsorText ? (
-            <p className="text-lg leading-relaxed whitespace-pre-wrap">
-              {concert.sponsorText}
-            </p>
-          ) : (
-            <p className="text-lg text-center italic">
-              No sponsor information available
-            </p>
-          )}
+      {/* Main scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Sponsors Section with bottom padding for navbar */}
+        <div className="px-4 py-6 pb-24">
+          <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Sponsors</h2>
+          <div className="bg-[#334934] rounded-2xl p-6 text-white">
+            {concert.sponsorText ? (
+              <p className="text-lg leading-relaxed whitespace-pre-wrap">
+                {concert.sponsorText}
+              </p>
+            ) : (
+              <p className="text-lg text-center italic">
+                No sponsor information available
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
-      <Navbar />
+      {/* Fixed navbar at bottom */}
+      <div className="fixed bottom-0 left-0 right-0">
+        <Navbar />
+      </div>
     </div>
   );
 } 
