@@ -1,5 +1,5 @@
 import { db } from './config';
-import { doc, getDoc, Timestamp, getDocs, query, where, collection } from 'firebase/firestore';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
 
 export interface Concert {
   concertType: string;

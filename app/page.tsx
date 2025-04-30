@@ -146,10 +146,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Scrollable timeline section, height calculated to fit between fixed top and navbar */}
+      {/* Scrollable timeline section */}
       <div className="flex-1 bg-[#FEFBF4] overflow-y-auto concert-scrollbar" style={{ minHeight: 0 }}>
         <section className="px-6 pb-32 pt-2">
-          {scannedConcerts.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 mb-4">Loading concerts...</p>
+            </div>
+          ) : scannedConcerts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 mb-4">No concerts added yet</p>
               <p className="text-gray-400 text-sm">
