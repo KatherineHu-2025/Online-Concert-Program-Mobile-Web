@@ -14,38 +14,16 @@ interface ConcertBlockProps {
 }
 
 const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, circleColor }) => {
-  const [mounted, setMounted] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const router = useRouter();
-  
   const [isPastConcert, setIsPastConcert] = useState(false);
+  const router = useRouter();
 
+  // Use useEffect for client-side-only operations
   useEffect(() => {
-    setMounted(true);
     const savedConcerts = getSavedConcerts();
     setIsSaved(savedConcerts.some(concert => concert.id === id));
     setIsPastConcert(new Date(date) < new Date());
   }, [id, date]);
-
-  if (!mounted) {
-    return (
-      <div className="rounded-lg p-4 shadow-sm text-[#FEFBF4] relative" style={{ backgroundColor: '#334934' }}>
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-lg font-semibold mb-0.5">{title}</h3>
-            <div className="flex items-center gap-1 opacity-90 mb-1">
-              <CalendarIcon className="h-5 w-5" />
-              <p>{date}</p>
-            </div>
-            <div className="flex items-center gap-1 opacity-80">
-              <MapPinIcon className="h-5 w-5" />
-              <p>{venue}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const formattedColor = circleColor?.startsWith('#') ? circleColor : `#${circleColor || 'DEDDED'}`;
 
