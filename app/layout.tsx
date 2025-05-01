@@ -7,20 +7,20 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
 });
-
 
 const lora = Lora({ 
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-lora',
 });
-
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,11 +32,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  const htmlClasses = [
+    geistSans.variable,
+    geistMono.variable,
+    lora.variable,
+    'antialiased'
+  ].join(' ');
 
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} antialiased`}>
-      <body className={`${geistSans.className} ${geistMono.className} ${lora.className}`}>
-        {children}
+  const bodyClasses = [
+    geistSans.className,
+    geistMono.className,
+    lora.className
+  ].join(' ');
+
+  return (
+    <html lang="en" className={htmlClasses}>
+      <body suppressHydrationWarning={true} className={bodyClasses}>
+        <div className="min-h-screen">
+          {children}
+        </div>
       </body>
     </html>
   );

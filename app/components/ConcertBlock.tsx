@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getSavedConcerts, saveConcert, unsaveConcert } from '../utils/concertStorage';
@@ -16,10 +18,11 @@ interface ConcertBlockProps {
 const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, circleColor }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isPastConcert, setIsPastConcert] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
-  // Use useEffect for client-side-only operations
   useEffect(() => {
+    setIsClient(true);
     const savedConcerts = getSavedConcerts();
     setIsSaved(savedConcerts.some(concert => concert.id === id));
     setIsPastConcert(new Date(date) < new Date());
@@ -65,7 +68,7 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
     <Link href={`/concert/${id}`}>
       <div 
         className="rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow text-[#FEFBF4] relative"
-        style={{ backgroundColor: isPastConcert ? '#734053' : '#334934' }}
+        style={{ backgroundColor: isClient && isPastConcert ? '#734053' : '#334934' }}
       >
         <div className="flex justify-between items-start">
           <div>
@@ -79,42 +82,44 @@ const ConcertBlock: React.FC<ConcertBlockProps> = ({ id, title, date, venue, cir
               <p>{venue}</p>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <div 
-              className="w-8 h-8 rounded-full flex-shrink-0 border-2 border-[#FEFBF4]"
-              style={{ backgroundColor: formattedColor, opacity: 1 }}
-            />
-            <button 
-              onClick={handleSave}
-              className="w-8 h-8 flex items-center justify-center"
-            >
-              <svg 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill={isSaved ? "#FEFBF4" : "none"} 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path 
-                  d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17.5L5 21V5Z" 
-                  stroke="#FEFBF4"
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            {isPastConcert && (
-              <button
-                onClick={handleCreateJournal}
+          {isClient && (
+            <div className="flex flex-col items-center gap-2">
+              <div 
+                className="w-8 h-8 rounded-full flex-shrink-0 border-2 border-[#FEFBF4]"
+                style={{ backgroundColor: formattedColor, opacity: 1 }}
+              />
+              <button 
+                onClick={handleSave}
                 className="w-8 h-8 flex items-center justify-center"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FEFBF4" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill={isSaved ? "#FEFBF4" : "none"} 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path 
+                    d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17.5L5 21V5Z" 
+                    stroke="#FEFBF4"
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
-            )}
-          </div>
+              {isPastConcert && (
+                <button
+                  onClick={handleCreateJournal}
+                  className="w-8 h-8 flex items-center justify-center"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FEFBF4" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </Link>
