@@ -14,6 +14,7 @@ interface ProgramItemType {
   piece: string;
   movements?: string[];
   years?: string;
+  duration?: string;
 }
 
 interface ConcertType {
@@ -51,9 +52,9 @@ export default function ProgramPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FEFBF4] font-lora">
+    <div className="min-h-screen flex flex-col bg-[#FEFBF4] font-lora">
       {/* Top title bar */}
-      <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4">
+      <div className="bg-[#2D2F3D] text-white py-5 px-4 flex items-center gap-4 flex-shrink-0">
         <Link href={`/concert/${concertId}`} className="text-xl">
           ←
         </Link>
@@ -63,7 +64,7 @@ export default function ProgramPage() {
       </div>
 
       {/* Header with background image */}
-      <div className="relative h-[200px]">
+      <div className="relative h-[200px] flex-shrink-0">
         <Image
           src="/orchestra-bg.jpg"
           alt="Orchestra performing"
@@ -81,57 +82,72 @@ export default function ProgramPage() {
         </div>
       </div>
 
-      {/* Program Section */}
-      <div className="px-4 py-6">
-        <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Program</h2>
-        <div className="bg-[#E5EFE7] rounded-2xl overflow-hidden">
-          <div className="p-8 min-h-[calc(100vh-24rem)] overflow-y-auto">
-            {concert?.programs && concert.programs.length > 0 ? (
-              concert.programs.map((item, index) => (
-                <div key={index} className="mb-12 last:mb-0">
-                  {item.piece === "Intermission" ? (
-                    <div className="text-center italic text-xl tracking-widest my-16">
-                      I n t e r m i s s i o n
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => setSelectedPiece(item)}
-                      className="w-full text-left group"
-                    >
-                      <div className="flex justify-between items-start gap-8 mb-2">
-                        <div className="flex-1">
-                          <h3 className="text-xl font-medium mb-1">
-                            {item.piece}
-                          </h3>
-                          {item.movements && item.movements.map((movement, idx) => (
-                            <div key={idx} className="text-gray-600 pl-6 mb-1 italic">
-                              {movement}
-                            </div>
-                          ))}
+      {/* Main scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Program Section with bottom padding for navbar */}
+        <div className="px-4 py-6 pb-24">
+          <h2 className="text-[#2D2F3D] text-2xl font-bold mb-6">Program</h2>
+          <div className="bg-[#E5EFE7] rounded-2xl">
+            <div className="p-8">
+              {concert?.programs && concert.programs.length > 0 ? (
+                concert.programs.map((item, index) => (
+                  <div key={index} className="mb-12 last:mb-0">
+                    {item.piece === "Intermission" ? (
+                      <div className="text-center">
+                        <div className="italic text-xl tracking-widest my-16">
+                          I n t e r m i s s i o n
                         </div>
-                        <div className="text-right">
-                          <div className="font-medium">{item.composer}</div>
-                          {item.years && (
-                            <div className="text-gray-600 text-sm">
-                              ({item.years})
-                            </div>
-                          )}
-                        </div>
+                        {item.duration && (
+                          <div className="text-gray-600 text-sm -mt-12 mb-16">
+                            Duration: {item.duration}
+                          </div>
+                        )}
                       </div>
-                      {item.notes && (
-                        <div className="text-sm text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                          View program notes →
+                    ) : (
+                      <button
+                        onClick={() => setSelectedPiece(item)}
+                        className="w-full text-left group"
+                      >
+                        <div className="flex justify-between items-start gap-8 mb-2">
+                          <div className="flex-1">
+                            <h3 className="text-xl font-medium mb-1">
+                              {item.piece}
+                            </h3>
+                            {item.movements && item.movements.map((movement, idx) => (
+                              <div key={idx} className="text-gray-600 pl-6 mb-1 italic">
+                                {movement}
+                              </div>
+                            ))}
+                          </div>
+                          <div className="text-right">
+                            <div className="font-medium">{item.composer}</div>
+                            {item.years && (
+                              <div className="text-gray-600 text-sm">
+                                ({item.years})
+                              </div>
+                            )}
+                            {item.duration && (
+                              <div className="text-gray-600 text-sm mt-1">
+                                Duration: {item.duration}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </button>
-                  )}
+                        {item.notes && (
+                          <div className="text-sm text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                            View program notes →
+                          </div>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center text-gray-500 py-8">
+                  No program information available
                 </div>
-              ))
-            ) : (
-              <div className="text-center text-gray-500 py-8">
-                No program information available
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -145,7 +161,10 @@ export default function ProgramPage() {
         years={selectedPiece?.years}
       />
 
-      <Navbar />
+      {/* Fixed navbar at bottom */}
+      <div className="fixed bottom-0 left-0 right-0">
+        <Navbar />
+      </div>
     </div>
   );
 } 

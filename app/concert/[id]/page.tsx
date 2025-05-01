@@ -21,6 +21,7 @@ export default function ConcertPage() {
         try {
           const concertData = await getConcertById(params.id as string);
           console.log('Concert data:', concertData);
+          console.log('Duration from Firebase:', concertData?.duration);
           if (concertData) {
             setConcert(concertData);
           } else {

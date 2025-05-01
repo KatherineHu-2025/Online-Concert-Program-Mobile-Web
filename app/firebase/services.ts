@@ -23,9 +23,40 @@ export interface Concert {
     composer: string;
     piece: string;
     notes?: string;
+    duration?: string;
   }[];
   customSections?: Record<string, string | number | boolean | null>;
   duration?: string;
+}
+
+function calculateTotalDuration(programs: Concert['programs']): string {
+  if (!programs) return '--';
+  
+  let totalSeconds = 0;
+  
+  programs.forEach(program => {
+    if (program.duration) {
+      // Handle MM:SS format
+      const [minutes, seconds] = program.duration.split(':').map(Number);
+      if (!isNaN(minutes) && !isNaN(seconds)) {
+        totalSeconds += (minutes * 60) + seconds;
+      }
+    }
+  });
+  
+  if (totalSeconds === 0) return '--';
+  
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  
+  if (hours > 0) {
+    return `${hours} hr ${minutes} min ${seconds} sec`;
+  }
+  if (minutes > 0) {
+    return `${minutes} min ${seconds} sec`;
+  }
+  return `${seconds} sec`;
 }
 
 export async function getConcertById(concertId: string): Promise<Concert | null> {
@@ -39,6 +70,10 @@ export async function getConcertById(concertId: string): Promise<Concert | null>
       if (data.date && data.date instanceof Timestamp) {
         data.date = data.date.toDate().toLocaleString();
       }
+      // Calculate total duration from program durations
+      if (data.programs) {
+        data.duration = calculateTotalDuration(data.programs);
+      }
       return data as Concert;
     } else {
       console.error('No concert found with ID:', concertId);
@@ -49,6 +84,15 @@ export async function getConcertById(concertId: string): Promise<Concert | null>
     return null;
   }
 }
+
+
+// export async function updateConcert(concertId: string, data: Partial<Concert>): Promise<void> {
+//   try {
+//     const concertRef = doc(db, 'publicEvents', concertId);
+//     await updateDoc(concertRef, data);
+//   } catch (error) {
+//     console.error('Error updating concert:', error);
+//     throw error;
 
 // New function to verify multiple concerts exist
 export async function verifyConcertsExist(concertIds: string[]): Promise<string[]> {
@@ -72,5 +116,6 @@ export async function verifyConcertsExist(concertIds: string[]): Promise<string[
   } catch (error) {
     console.error('Error verifying concerts:', error);
     return [];
+
   }
 } 
