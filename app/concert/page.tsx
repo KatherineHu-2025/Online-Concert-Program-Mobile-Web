@@ -69,6 +69,18 @@ export default function ConcertPage() {
               Sponsors
             </button>
           </Link>
+
+          <a 
+            href="https://forms.gle/HaaoVnmhYS8UBf7Y7" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="block"
+          >
+            <button className="w-full py-2.5 px-6 bg-[#F2C3B3] text-[#2D2F3D] rounded-2xl text-xl font-semibold">
+              Feedback
+            </button>
+          </a>
+          
         </div>
       </div>
 
